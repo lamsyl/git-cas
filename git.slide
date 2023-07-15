@@ -1,0 +1,395 @@
+# The stupid content tracker
+
+## man git
+
+```
+GIT(1)                                                Git Manual                                                GIT(1)
+
+NAME
+       git - the stupid content tracker
+
+```
+
+.image Git-Logo-2Color.png 200 _
+
+## What can we learn from this stupid content tracker?
+
+**Content-addressable storage**
+
+[Wikipedia](https://en.wikipedia.org/wiki/Content-addressable_storage#Open-source):
+
+> Git is a userspace CAS filesystem. Git is primarily used as a source code control system.
+
+.image Git-Logo-2Color.png 100 _
+
+> InterPlanetary File System (IPFS), is a content-addressable, peer-to-peer hypermedia distribution protocol.
+
+.image Ipfs-logo-1024-ice-text.png 100 _
+
+## Content-addressable storage
+
+[Wikipedia](https://en.wikipedia.org/wiki/Content-addressable_storage):
+
+> store information so it can be retrieved based on its **content**, not its **name or location**
+
+## Retrieve by Name / Location - File URI
+
+`file:///Users/yuklam/repo/rustlings/LICENSE`
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2016 Carol (Nichols || Goulding)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Retrieve by Name / Location - Web page URL
+
+`https://en.wikipedia.org/wiki/URL`
+
+```
+<!DOCTYPE html>
+<html class="client-nojs vector-feature-language-in-header-enabled vector-feature-language-in-main-page-header-disabled vector-feature-sticky-header-disabled vector-feature-page-tools-pinned-disabled vector-feature-toc-pinned-enabled vector-feature-main-menu-pinned-disabled vector-feature-limited-width-enabled vector-feature-limited-width-content-enabled vector-feature-zebra-design-disabled" lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<title>URL - Wikipedia</title>
+
+ ...
+```
+
+## Retrieve by Content
+
+To obtain:
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2016 Carol (Nichols || Goulding)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## Retrieve by Content
+
+We have to provide this? 🤔
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2016 Carol (Nichols || Goulding)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+##
+
+.image recursion.gif
+
+## Hash function
+
+SHA-1
+
+```
+❯ cat LICENSE | git hash-object --stdin
+30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0
+```
+
+## Retrieve by Content
+
+We provide a SHA-1 hash:
+
+`30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0`
+
+## Retrieve by Content
+
+To obtain:
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2016 Carol (Nichols || Goulding)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+## But ...
+
+SHA-1 is a one-way function
+
+`LICENSE` 📄 → `30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0`
+`30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0` → 🤨
+
+## Object Database
+
+```
+❯ ls .git/objects
+00/   12/   24/   36/   48/   5a/   6c/   7e/   90/   a2/   b4/   c6/   d8/   ea/   fc/
+01/   13/   25/   37/   49/   5b/   6d/   7f/   91/   a3/   b5/   c7/   d9/   eb/   fd/
+02/   14/   26/   38/   4a/   5c/   6e/   80/   92/   a4/   b6/   c8/   da/   ec/   fe/
+03/   15/   27/   39/   4b/   5d/   6f/   81/   93/   a5/   b7/   c9/   db/   ed/   ff/
+04/   16/   28/   3a/   4c/   5e/   70/   82/   94/   a6/   b8/   ca/   dc/   ee/   info/
+05/   17/   29/   3b/   4d/   5f/   71/   83/   95/   a7/   b9/   cb/   dd/   ef/   pack/
+06/   18/   2a/   3c/   4e/   60/   72/   84/   96/   a8/   ba/   cc/   de/   f0/
+07/   19/   2b/   3d/   4f/   61/   73/   85/   97/   a9/   bb/   cd/   df/   f1/
+08/   1a/   2c/   3e/   50/   62/   74/   86/   98/   aa/   bc/   ce/   e0/   f2/
+09/   1b/   2d/   3f/   51/   63/   75/   87/   99/   ab/   bd/   cf/   e1/   f3/
+0a/   1c/   2e/   40/   52/   64/   76/   88/   9a/   ac/   be/   d0/   e2/   f4/
+0b/   1d/   2f/   41/   53/   65/   77/   89/   9b/   ad/   bf/   d1/   e3/   f5/
+0c/   1e/   30/   42/   54/   66/   78/   8a/   9c/   ae/   c0/   d2/   e4/   f6/
+0d/   1f/   31/   43/   55/   67/   79/   8b/   9d/   af/   c1/   d3/   e5/   f7/
+0e/   20/   32/   44/   56/   68/   7a/   8c/   9e/   b0/   c2/   d4/   e6/   f8/
+0f/   21/   33/   45/   57/   69/   7b/   8d/   9f/   b1/   c3/   d5/   e7/   f9/
+10/   22/   34/   46/   58/   6a/   7c/   8e/   a0/   b2/   c4/   d6/   e8/   fa/
+11/   23/   35/   47/   59/   6b/   7d/   8f/   a1/   b3/   c5/   d7/   e9/   fb/
+```
+
+## Object Database
+
+```
+❯ file .git/objects/30/f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0
+ .git/objects/30/f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0: zlib compressed data
+
+❯ git cat-file -p 30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0 | head
+The MIT License (MIT)
+
+Copyright (c) 2016 Carol (Nichols || Goulding)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+```
+
+## Files 📄 are content-addressable
+
+In Git terminology, a **blob** is content-addressable.
+
+```
+❯ git ls-tree HEAD | rg LICENSE
+100644 blob 30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0	LICENSE
+```
+
+`git ls-tree HEAD`
+
+List the SHA-1 hash of the objects in current directory
+
+`HEAD`
+
+Currently checkout commit
+
+## Directories 📂 are content-addressable
+
+In Git terminology, a **tree** is content-addressable.
+
+```
+❯ ls exercises/
+README.md        generics/        macros/          quiz2.rs         threads/
+clippy/          hashmaps/        modules/         quiz3.rs         traits/
+conversions/     if/              move_semantics/  smart_pointers/  variables/
+enums/           intro/           options/         strings/         vecs/
+error_handling/  iterators/       primitive_types/ structs/
+functions/       lifetimes/       quiz1.rs         tests/
+
+❯ git ls-tree HEAD | rg exercises
+040000 tree 1eb40bbfde6f47e3ee7615a17e8b94b0adee0b29	exercises
+```
+
+## Directories 📂 are content-addressable
+
+In Git terminology, a **tree** is content-addressable.
+
+```
+❯ git cat-file -p 1eb40bbfde6f47e3ee7615a17e8b94b0adee0b29 | head
+100644 blob c7effa95b6781e722b74ce9307b1070d0cae6099	README.md
+040000 tree 94bada87c13013776ed7f9335425a1bcfda39a7d	clippy
+040000 tree 76a9ce006d71340400760fcb8adac7663c4a3f64	conversions
+040000 tree 1c3628c6d4bd24d4b540ac1cf8b5ef6d6e57ebd0	enums
+040000 tree b43df6521e0c0d7b283e17ee3e57bbf2fb49ac8c	error_handling
+040000 tree 5b68cb4037dd2e5e4580431f622ab582b567711a	functions
+040000 tree 903bc4d743ef34a6854f4f9cee180cfd9cc732f5	generics
+040000 tree 68ddf6c104e0f71557445311391f1178204ffe39	hashmaps
+040000 tree 9bf505c84312826319307e8956f6d8789e6c7d17	if
+040000 tree 087db2a6f887a263fb4a6ba62c2093a9d1cac0d0	intro
+```
+
+## Commits 🚀 are content-addressable
+
+```
+❯ git cat-file -p HEAD
+tree 302326eee6e4a065391cfb698f40de6eecd590ac
+parent f452fd7bb0118d8e56848ec9e3f5e6e733be6316
+parent 6d1f8c5111bbfb58c6443e3776676be70e6a1b3e
+author liv <shadows_withal@fastmail.com> 1684333831 +0200
+committer liv <shadows_withal@fastmail.com> 1684333831 +0200
+
+Merge branch 'main' of github.com:rust-lang/rustlings
+```
+
+## Data model
+
+.code data-model-structure.go /START OMIT/,/END OMIT/
+
+## Data model
+
+.code data-model-store.go /START OMIT/,/END OMIT/
+.code data-model-store.go /START2 OMIT/,/END2 OMIT/
+
+##
+
+.image data-model-2.png
+
+##
+
+.image data-model-3.png
+
+## Experiment 🧑‍🔬
+
+## What if two files have the same content?
+
+: cp LICENSE LICENSE_COPY
+: git add LICENSE_COPY
+: git commit -m 'Add LICENSE_COPY'
+: git log
+: git cat-file -p <SHA1-commit>
+: git cat-file -p <SHA1-tree>
+: 100644 blob 30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0	LICENSE
+: 100644 blob 30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0	LICENSE_COPY
+: Same blob content => same SHA-1
+: Trees (not blobs) contain filename info
+
+: vim LICENSE_COPY 2016 -> 2023
+: git add LICENSE_COPY
+: git commit -m 'Change year in LICENSE_COPY'
+: git log
+: git cat-file -p <SHA1-commit>
+: git cat-file -p <SHA1-tree>
+: 100644 blob 30f5c619789bc6ca1b2838a78b9b3cf3a0a9dfc0	LICENSE
+: 100644 blob 9559dea734131bb0f51ba05874c373a751fe784c	LICENSE_COPY
+
+: git rm LICENSE_COPY
+: git commit -m 'Remove LICENSE_COPY'
+: git log                                                     // Note the SHA-1 of HEAD & origin/main
+: git cat-file -p <SHA1-commit>                               // HEAD
+: tree acf244d6f3fba7f05622f4213e75d7a5340e54af
+: git cat-file -p <SHA1-commit>                               // origin/main
+: tree acf244d6f3fba7f05622f4213e75d7a5340e54af
+: Same tree content => same SHA-1
+
+## Can I recover lost objects?
+
+: git reset --hard origin/main
+: git log                                                     // lost previous commits
+: git cat-file -p 9559dea734131bb0f51ba05874c373a751fe784c
+: Object is still in .git/objects
+
+: How to find the SHA-1 of lost blob?
+: git reflog
+: 3cfa279 HEAD@{5}: commit: Change year in LICENSE_COPY
+: git checkout 3cfa279
+: cat LICENSE_COPY                                            // 2023
+
+: git checkout main
+: git reflog expire --all --expire-unreachable=all
+: git gc --prune=now --aggressive
+: git cat-file -p 9559dea734131bb0f51ba05874c373a751fe784c    // gone
+: fatal: Not a valid object name 9559dea734131bb0f51ba05874c373a751fe784c
+
+## Explore more
+
+[Pro Git](https://git-scm.com/book/en/v2)
+
+```
+10. Git Internals
+
+    10.1 Plumbing and Porcelain
+    10.2 Git Objects
+    10.3 Git References
+    10.4 Packfiles
+    10.5 The Refspec
+    10.6 Transfer Protocols
+    10.7 Maintenance and Data Recovery
+    10.8 Environment Variables
+    10.9 Summary
+```
+
+## Explore more
+
+MIT class
+
+[The Missing Semester - Version Control (Git)](https://missing.csail.mit.edu/2020/version-control/)
+
+<br/>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2sjqTHE0zok" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+// ## Explore more
+//
+// - Directed acyclic graph
+// - Merkle tree
