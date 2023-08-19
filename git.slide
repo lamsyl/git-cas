@@ -292,14 +292,14 @@ committer liv <shadows_withal@fastmail.com> 1684333831 +0200
 Merge branch 'main' of github.com:rust-lang/rustlings
 ```
 
-## Data model
-
-.code data-model-structure.go /START OMIT/,/END OMIT/
-
-## Data model
-
-.code data-model-store.go /START OMIT/,/END OMIT/
-.code data-model-store.go /START2 OMIT/,/END2 OMIT/
+// ## Data model
+//
+// .code data-model-structure.go /START OMIT/,/END OMIT/
+//
+// ## Data model
+//
+// .code data-model-store.go /START OMIT/,/END OMIT/
+// .code data-model-store.go /START2 OMIT/,/END2 OMIT/
 
 ##
 
